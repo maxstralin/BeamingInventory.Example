@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BeamingInventory.Example.Presentation.Entities;
 using BeamingInventory.Example.Presentation.Entities.Interfaces;
 
 namespace BeamingInventory.Example.Presentation.App

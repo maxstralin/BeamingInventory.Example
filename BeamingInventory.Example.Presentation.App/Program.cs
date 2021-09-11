@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BeamingInventory.Example.Presentation.Entities;
 using BeamingInventory.Example.Presentation.Entities.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
