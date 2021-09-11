@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "BeamingInventory.Example.Presentation.App": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ApiUrl": "https://localhost:44310/"
+      }
+    }
+  }
+}

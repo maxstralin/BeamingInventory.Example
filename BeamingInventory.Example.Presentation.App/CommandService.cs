@@ -16,10 +16,10 @@ namespace BeamingInventory.Example.Presentation.App
     public class CommandService : ICommandService
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly ILogger<CommandService> _logger;
         private readonly HttpClient _httpClient;
 
-        public CommandService(IConfiguration configuration, ILogger logger, IHttpClientFactory httpClientFactory)
+        public CommandService(IConfiguration configuration, ILogger<CommandService> logger, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration;
             _logger = logger;
@@ -29,7 +29,10 @@ namespace BeamingInventory.Example.Presentation.App
 
         private static StringContent CreateJsonContent(object obj)
         {
-            return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, MediaTypeNames.Application.Json);
+            return new StringContent(JsonSerializer.Serialize(obj, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            }), Encoding.UTF8, MediaTypeNames.Application.Json);
         }
 
         public HttpRequestMessage CreateSalesRequest(int count)
@@ -55,17 +58,17 @@ namespace BeamingInventory.Example.Presentation.App
             return new HttpRequestMessage(HttpMethod.Get, _configuration.Endpoints['I']);
         }
 
-        private static TOut ConvertParam<TIn, TOut>(TIn param) where TIn : IConvertible
+        private static int ConvertToInt(string param)
         {
-            return (TOut)Convert.ChangeType(param, typeof(TIn));
+            return int.Parse(param);
         }
 
         public HttpRequestMessage CreateBody(CommandType commandType, string? param)
         {
             return commandType.CommandChar switch
             {
-                'S' => CreateSalesRequest(ConvertParam<string, int>(param ?? throw new ArgumentNullException(nameof(param)))),
-                'I' => CreateInventoryAddRequest(ConvertParam<string, int>(param ?? throw new ArgumentNullException(nameof(param)))),
+                'S' => CreateSalesRequest(ConvertToInt(param ?? throw new ArgumentNullException(nameof(param)))),
+                'I' => CreateInventoryAddRequest(ConvertToInt(param ?? throw new ArgumentNullException(nameof(param)))),
                 'L' => CreateInventoryListRequest(),
                 _ => throw new InvalidOperationException($"Command '{commandType.CommandChar}' doesn't have a handler associated with it")
             };
@@ -83,7 +86,10 @@ namespace BeamingInventory.Example.Presentation.App
 
             try
             {
-                var response = JsonSerializer.Deserialize<ApiResponse>(returnBody);
+                var response = JsonSerializer.Deserialize<ApiResponse>(returnBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
                 if (!response.Successful) _logger.LogError($"Error with command {commandType.CommandChar} (param: {param}). Message: {response.Message}");
                 return response;
             }

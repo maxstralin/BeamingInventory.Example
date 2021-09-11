@@ -17,13 +17,24 @@ namespace BeamingInventory.Example.Api.Controllers
         [HttpGet]
         public IActionResult GetInventory()
         {
-            return Ok(new InventoryInfo { CurrentCount = _inventoryManager.GetCurrentCount() });
+            var info = new InventoryInfo {CurrentCount = _inventoryManager.GetCurrentCount()};
+            var response =
+                new ApiResponse<InventoryInfo>(true, info)
+                {
+                    Message = $"In inventory: {info.CurrentCount}"
+                };
+            return Ok(response);
         }
 
         [HttpPost]
         public IActionResult AddInventory([FromBody] PostSaleVm vm)
         {
-            return Ok(_inventoryManager.Insert(vm.Count));
+            var change = _inventoryManager.Insert(vm.Count);
+            var response = new ApiResponse<InventoryChange>(true, change)
+            {
+                Message = $"Now in inventory: {change.CurrentCount}. Previously: {change.PreviousCount}"
+            };
+            return Ok(response);
         }
     }
 }

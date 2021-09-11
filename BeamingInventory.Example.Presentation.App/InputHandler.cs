@@ -9,9 +9,9 @@ namespace BeamingInventory.Example.Presentation.App
     {
         private readonly ICommandsProvider _commandsProvider;
         private readonly ICommandService _commandService;
-        private readonly ILogger _logger;
+        private readonly ILogger<InputHandler> _logger;
 
-        public InputHandler(ICommandsProvider commandsProvider, ICommandService commandService, ILogger logger)
+        public InputHandler(ICommandsProvider commandsProvider, ICommandService commandService, ILogger<InputHandler> logger)
         {
             _commandsProvider = commandsProvider;
             _commandService = commandService;
@@ -52,7 +52,7 @@ namespace BeamingInventory.Example.Presentation.App
             }
 
             //Remaining part of the input (if any) 
-            var param = input[..1];
+            var param = input[1..];
 
             var result = await _commandService.PerformAsync(command, param);
 

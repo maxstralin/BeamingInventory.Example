@@ -25,7 +25,8 @@ namespace BeamingInventory.Example.Presentation.App
             while (true)
             {
                 var input = Console.ReadLine();
-                await inputHandler.ProcessInputAsync(input);
+                var result= await inputHandler.ProcessInputAsync(input);
+                Console.WriteLine(result);
             }
         }
 
@@ -34,12 +35,11 @@ namespace BeamingInventory.Example.Presentation.App
             //We know that this is a console app running locally somewhat ephemerally.
             //Presumably, different lifetimes would be relevant for other scenarios (e.g. ASP.NET Core web app)
             var collection = new ServiceCollection();
-            collection.AddSingleton<ICommandsProvider, CommandsProvider>()
+            collection.AddLogging().AddSingleton<ICommandsProvider, CommandsProvider>()
                 .AddSingleton<InputHandler>()
                 .AddSingleton<ICommandService, CommandService>()
                 .AddHttpClient()
-                .AddSingleton<IConfiguration, Configuration>() //Could have been IOptions pattern but that's more for ASP.NET
-                .AddLogging();
+                .AddSingleton<IConfiguration, Configuration>(); //Could have been IOptions pattern but that's more for ASP.NET
             return collection.BuildServiceProvider();
         }
     }

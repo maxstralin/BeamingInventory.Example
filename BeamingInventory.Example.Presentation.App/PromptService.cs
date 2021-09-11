@@ -8,6 +8,7 @@ namespace BeamingInventory.Example.Presentation.App
         {
             Console.WriteLine($"{prompt} Yes (Press Y), No (Press N)");
             var response = char.ToUpper(Console.ReadKey().KeyChar);
+            Console.WriteLine();
             return response == 'Y';
         }
     }
