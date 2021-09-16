@@ -52,7 +52,7 @@ namespace BeamingInventory.Example.Presentation.Tests
 
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-            _commandService = new CommandService(_configuration, NullLogger.Instance, mockFactory.Object);
+            _commandService = new CommandService(_configuration, new NullLogger<CommandService>(), mockFactory.Object);
         }
 
         [Theory]
