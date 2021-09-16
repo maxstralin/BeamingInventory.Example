@@ -1,0 +1,31 @@
+version: '3.8'
+
+services: 
+  api-container:
+    build: 
+        dockerfile: Dockerfile_Api
+        context: .
+    image: api
+    ports:
+      - 8282:80
+    hostname: inventory-api
+    networks: 
+     - inventory-network
+
+  console-app:
+    image: console-app
+    build:
+        dockerfile: Dockerfile_ConsoleApp
+        context: .
+    stdin_open: true
+    tty: true
+    container_name: inventory-app
+    environment:
+      - ApiUrl=http://inventory-api/
+    depends_on: 
+      - api-container
+    networks: 
+     - inventory-network
+    
+networks:
+  inventory-network:

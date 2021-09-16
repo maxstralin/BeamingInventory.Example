@@ -5,6 +5,9 @@
       "environmentVariables": {
         "ApiUrl": "https://localhost:44310/"
       }
+    },
+    "Docker": {
+      "commandName": "Docker"
     }
   }
 }
